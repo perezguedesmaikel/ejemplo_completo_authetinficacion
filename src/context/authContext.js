@@ -1,4 +1,5 @@
 import React, {createContext, useContext} from 'react';
+import {supabase} from '../supabase/credencial_supabase';
 
 export const authContext=createContext(null);
 
@@ -7,13 +8,12 @@ export const authContext=createContext(null);
 
  }
 export function AuthProvider({children}) {
-    const user={
-        login:true,
-        admin:false
-    }
-    const cadena='Probando Cadena';
+const signup=(email,password)=>{
+    console.log(email,password);
+}
+
     return(
-        <authContext.Provider value={{user,cadena}}>
+        <authContext.Provider value={{signup}}>
             {children}
         </authContext.Provider>
     )

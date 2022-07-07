@@ -1,13 +1,28 @@
 import React from "react";
 import './App.css';
 import {useAuth} from './context/authContext';
+import {Link, Route, Routes} from 'react-router-dom';
+import Login from "./components/login";
+import Registrar from "./components/Registrar";
+import Home from "./components/Home";
+import {supabase} from "./supabase/credencial_supabase";
 
 function App() {
     const authcontex=useAuth();
     const {user}=authcontex;
+    async function salir() {
+        try{
+            const {error} = await supabase.auth.signOut();
+            error?console.log(error):console.log('se ha cerrado sesión');
+        }catch (e) {
+            console.log(e.message);
+        }
+
+
+    }
     //aqui en el console log s eve claro el ejemplo de contexto
-    console.log(authcontex);
-    console.log(user);
+    //console.log(authcontex);
+    //console.log(user);
   return (
     <div className="App">
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -21,37 +36,28 @@ function App() {
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
-                            <a className="nav-link active" aria-current="page" href="#">Home</a>
+                            <Link className="nav-link active" aria-current="page" href="#"  to={'/'}>Home</Link>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link" href="#">Link</a>
+                        <li className="nav-item" >
+                            <Link className="nav-link" href="#" to={'/login'}>Login</Link>
                         </li>
-                        <li className="nav-item dropdown">
-                            <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a className="dropdown-item" href="#">Action</a></li>
-                                <li><a className="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr className="dropdown-divider"/>
-                                </li>
-                                <li><a className="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                        <li className="nav-item">
-                            <a className="nav-link disabled" href="#" tabIndex="-1" aria-disabled="true">Disabled</a>
+                        <li className="nav-item" >
+                            <Link className="nav-link" href="#" to={'/registrar'}>Registrar</Link>
                         </li>
                     </ul>
-                    <form className="d-flex">
-                        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                            <button className="btn btn-outline-success" type="submit">Search</button>
-                    </form>
+                    <button className='btn btn-primary' onClick={salir}>Salir</button>
                 </div>
             </div>
+
         </nav>
+        <Routes>
+            <Route path={'/login'} element={<Login/>}/>
+            <Route path={'/registrar'} element={<Registrar/>}/>
+            <Route path={'/'} element={<Home/>}/>
+            <Route path={'*'} element={<h1>Ruta erronea!!!!</h1>}/>
+        </Routes>
     </div>
+
   );
 }
 

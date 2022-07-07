@@ -14,12 +14,7 @@ root.render(
   <React.StrictMode>
       <BrowserRouter>
           <AuthProvider>
-    <Routes>
-        <Route path={'/login'} element={<Login/>}/>
-        <Route path={'/registrar'} element={<Registrar/>} />
-        <Route path={'*'} element={<h1>Ruta erronea!!!!</h1>}/>
-        <Route path={'/'} element={<App/>} index/>
-    </Routes>
+              <App/>
           </AuthProvider>
       </BrowserRouter>
   </React.StrictMode>

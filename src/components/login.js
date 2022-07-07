@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import {supabase} from "../supabase/credencial_supabase";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Copyright(props) {
@@ -26,13 +27,24 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const email = data.get('email');
+        const password = data.get('password');
+        try{
+            const {user, session, error} = await supabase.auth.signIn({
+                email: email,
+                password: password
+            });
+            console.log(user);
+            console.log(session);
+            error&&console.log(error.message);
+        }catch (e) {
+            console.log(e.message);
+        }
+
+
     };
 
     return (

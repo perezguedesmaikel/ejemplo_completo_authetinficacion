@@ -3,8 +3,6 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -12,7 +10,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import {supabase} from '../supabase/credencial_supabase';
+import {useAuth} from '../context/authContext';
 function Copyright(props) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -25,17 +24,28 @@ function Copyright(props) {
         </Typography>
     );
 }
-
 const theme = createTheme();
-
 export default function Registrar() {
-    const handleSubmit = (event) => {
+    const {signup}=useAuth();
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        const email = data.get('email');
+        const password = data.get('password');
+        signup(email, password);
+        try {
+            const {user, session, error} = await supabase.auth.signUp({
+                email: email,
+                password: password
+            });
+            user&&console.log(user);
+            console.log(session);
+            error ? console.log(error):console.log('El usuario se registró correctamente');
+        }catch (e) {
+            console.log(e.message);
+        }
+
+        //console.log({email, password});
     };
 
     return (
